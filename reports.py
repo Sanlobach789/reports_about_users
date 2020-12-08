@@ -10,13 +10,6 @@ TASKS_URL = f'{MAIN_URL}todos'
 # Максимальное количество попыток подключения
 RETRY_MAX_COUNT = 5
 
-# Проверка наличия директории task и ее создание, если отсутствует
-directory = 'tasks'
-parent_dir = os.getcwd()
-path = os.path.join(parent_dir, directory)
-if not os.path.exists(path):
-    os.mkdir(path)
-
 
 def get_http_data(url):  # Функция получения данных из json
     retry_attempt = 1
@@ -73,6 +66,13 @@ def format_tasks(tasks_list):  # Форматирование списка за�
 users_dict = get_http_data(USER_URL)
 to_do_dict = get_http_data(TASKS_URL)
 
+# Проверка наличия директории task и ее создание, если отсутствует
+directory = 'tasks'
+parent_dir = os.getcwd()
+path = os.path.join(parent_dir, directory)
+if not os.path.exists(path):
+    os.mkdir(path)
+
 if users_dict is None or to_do_dict is None:
     print("Нет необходимых данных для формирования отчётов")
     raise SystemExit(1)
@@ -87,8 +87,6 @@ for user in users_dict:
         # Проверка на принадлежность задачи пользователю по совпадающему id и userId
         if user.get('id') == task.get('userId'):
             task_title = task.get('title')
-            if len(task_title) > 48:
-                task_title = task.get('title')
             if task.get('completed'):
                 completed_tasks.append(task_title)
             else:
